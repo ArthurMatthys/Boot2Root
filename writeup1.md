@@ -6,16 +6,17 @@ Status: Completed
 # Actions pour devenir root
 
 1. **Get the IP adress of the machine**
-To get any information from the machine, we first need to get the ip adress of it.
-To do that, we have to make a few changes in `virtual box`.
-We have to go into `settings → network` and add a new `adapter 2` :
-    - `attached to Host-only : Adapter`
-    - `Name : Vboxnet0`
+  To get any information from the machine, we first need to get the ip adress of it.
+  To do that, we have to make a few changes in `virtual box`.
+  We have to go into `settings → network` and add a new `adapter 2` :
 
-    Once it's done, start the machine.
+   - `attached to Host-only : Adapter`
+   - `Name : Vboxnet0`
 
-    Then, on your machine, use the command `ifconfig` and look for the `inet` of `vboxnet0`.
-    Mine is `192.168.56.1`
+   Once it's done, start the machine.
+
+   Then, on your machine, use the command `ifconfig` and look for the `inet` of `vboxnet0`.
+   Mine is `192.168.56.1`
 
 2. **Get informations about open ports**
 
@@ -25,22 +26,22 @@ We have to go into `settings → network` and add a new `adapter 2` :
     `nmap 192.168.56.1-255`.
     Here is the result :
 
-    Nmap scan report for risenshine (192.168.56.1)
-    Host is up (0.00014s latency).
-    Not shown: 998 closed ports
-    PORT STATE SERVICE
-    80/tcp open http
-    3306/tcp open mysql
-    Nmap scan report for 192.168.56.104
-    Host is up (0.00017s latency).
-    Not shown: 994 closed ports
-    PORT STATE SERVICE
-    21/tcp open ftp
-    22/tcp open ssh
-    80/tcp open http
-    143/tcp open imap
-    443/tcp open https
-    993/tcp open imaps
+    > Nmap scan report for risenshine (192.168.56.1)
+    > Host is up (0.00014s latency).
+    > Not shown: 998 closed ports
+    > PORT STATE SERVICE
+    > 80/tcp open http
+    > 3306/tcp open mysql
+    > Nmap scan report for 192.168.56.104
+    > Host is up (0.00017s latency).
+    > Not shown: 994 closed ports
+    > PORT STATE SERVICE
+    > 21/tcp open ftp
+    > 22/tcp open ssh
+    > 80/tcp open http
+    > 143/tcp open imap
+    > 443/tcp open https
+    > 993/tcp open imaps
 
 3. **Get pages pages that we have access**
 
@@ -48,12 +49,12 @@ We have to go into `settings → network` and add a new `adapter 2` :
     To have more info about this one, in particular the on the `https port`, we run the following command :
     `nmap 192.168.56.104 --script=http-enum`
 
-    443/tcp open  https
-    | http-enum: 
-    |   /forum/: Forum
-    |   /phpmyadmin/: phpMyAdmin
-    |   /webmail/src/login.php: squirrelmail version 1.4.22
-    |_  /webmail/images/sm_logo.png: SquirrelMail
+    > 443/tcp open  https
+    > | http-enum: 
+    > |   /forum/: Forum
+    > |   /phpmyadmin/: phpMyAdmin
+    > |   /webmail/src/login.php: squirrelmail version 1.4.22
+    > |_  /webmail/images/sm_logo.png: SquirrelMail
 
 4. **Get our first identifiants**
 With the previous info information, we decided to check the following link :
@@ -124,18 +125,18 @@ We have, again, two files, that we can copy on our side by doing so :
 with the previous password.
 With the README comes some clues to solve the binary file:
 
-Diffuse this bomb!
-When you have all the password use it as "thor" user with ssh.
-
-HINT:
-P
- 2
- b
-
-o
-4
-
-NO SPACE IN THE PASSWORD (password is case sensitive).
+> Diffuse this bomb!
+> When you have all the password use it as "thor" user with ssh.
+>
+> HINT:
+> P
+>  2
+>  b
+>
+> o
+> 4
+>
+> NO SPACE IN THE PASSWORD (password is case sensitive).
 
 But it isn't enough, we used ghidra to decompile the binary file. Here is the main :
 
@@ -345,12 +346,12 @@ We see that there is 6 differents step we need to solve to get the password, tha
 
     Here comes another bullshit level. We must provide a 6-length string that will, through an algorithm, will became `giants`. For each character, we take the ascii value, take the modulo by 16, and we take the character at this index in `array.123` (We added the first line). We also did a script to solve this, and we got this answer :
 
-    g <- {'o'}
-    i <- {'p'}
-    a <- {'e', 'u'}
-    n <- {'k'}
-    t <- {'m'}
-    s <- {'a', 'q'}
+    > g <- {'o'}
+    > i <- {'p'}
+    > a <- {'e', 'u'}
+    > n <- {'k'}
+    > t <- {'m'}
+    > s <- {'a', 'q'}
 
     Which means, that for this level, we now have 4 answers (YEAHHH) : 
     `opekma | opekmq | opukma | opukmq`
@@ -464,13 +465,13 @@ Again, two files, `turtle, README` that we copied with
 
 `scp -P 22 [thor@192.168.56.104](mailto:thor@192.168.56.104):/home/thor/{README,turtle} .` with the previous password.
 
-README :
-
-Finish this challenge and use the result as password for 'zaz' user.
+> README :
+>
+> Finish this challenge and use the result as password for 'zaz' user.
 
 And in the end of turtle, we have 
 
-Can you digest the message? :)
+> Can you digest the message? :)
 
 Before that, a lot of lines that goes like "move forward x, go backward y, turn left z, turn right w"
 
