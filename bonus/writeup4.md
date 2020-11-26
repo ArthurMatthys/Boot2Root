@@ -1,12 +1,6 @@
-Once you're connected as Laurie with ssh, (see writeup1), simply do :
-`fakeroot`
-And, as asked in the subject, if you run `id` : 
-```
-root@BornToSecHackMe:~# id
-uid=0(root) gid=0(root) groups=0(root),1003(laurie)
-```
-and you also have a promt where you can run `whoami`
-```
-root@BornToSecHackMe:~# whoami
-root
-```
+With any machine that you have root access, you can (once you're root):
+- Mount the .iso
+`mount -o loop BornToSecHackMe-v1.1.iso /mnt/Boot2Root`
+Then go to any directory (go to /tmp for exemple), then :
+`unsquashfs -f -d vm_content /mnt/Boot2Root/casper/filesystem.squashfs`
+And now, you're root and you have access to everything inside the .iso.
