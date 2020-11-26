@@ -479,7 +479,7 @@ Because of the word `digest` we thought it would be related to a hash. But in th
 
 We removed the last line, copy paste into the site, and we got this
 
-![writeup1%20f294f27096f440d3803d0b8efff5b8d0/Screenshot_from_2020-11-22_22-11-47.png](writeup1%20f294f27096f440d3803d0b8efff5b8d0/Screenshot_from_2020-11-22_22-11-47.png)
+![Tortue](Images/Tortue.png)
 
 After some thought, we recognized the word `SLASH`. Again, we tried and failed to connect with this password, we decided to hash it, and `MD5` was the answer : `echo -n "SLASH" | md5sum`
 `ssh zaz@192.168.56.104 -p 22 with 646da671ca01bb5d84dbb5fb2238dc8e`
